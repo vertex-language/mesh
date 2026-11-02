@@ -12,7 +12,7 @@ import (
 /// so a texture tiles across tiles seamlessly. A skirt (meters) hangs a
 /// strip down from the tile's edges, hiding the cracks where a tile meets
 /// a coarser neighbor.
-public func Chunk(_ f: Field, x: int, z: int, cells: int, step: int = 1, uvScale: float32 = 0.25, skirt: float32 = 0) -> mesh.Mesh {
+public func Chunk(f: Field, x: int, z: int, cells: int, step: int = 1, uvScale: float32 = 0.25, skirt: float32 = 0) -> mesh.Mesh {
     let s = max(1, step)
     let n = max(1, cells / s)
     var m = mesh.Mesh()

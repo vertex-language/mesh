@@ -8,7 +8,7 @@ import (
 /// Slump is thermal erosion: wherever ground is steeper than t.Talus,
 /// some of the excess moves to the lower neighbors, pass after pass, so
 /// sharp crests round off and slopes settle at a natural angle.
-public func Slump(_ f: inout Field, _ t: ThermalErosion) {
+public func Slump(f: inout Field, t: ThermalErosion) {
     let w = f.Width, d = f.Depth
     let limit = t.Talus * f.Spacing
     var delta = [float32](repeating: 0, count: w * d)
@@ -46,7 +46,7 @@ public func Slump(_ f: inout Field, _ t: ThermalErosion) {
 /// running downhill with some inertia, picking soil up where it speeds up
 /// and down where it slows or climbs, and drying as it goes. Gullies
 /// form where drops gather; hollows fill with what they drop.
-public func Rain(_ f: inout Field, _ h: HydraulicErosion, seed: uint32) {
+public func Rain(f: inout Field, h: HydraulicErosion, seed: uint32) {
     let w = f.Width, d = f.Depth
     var g = rand.Xorshift128Plus(seed: uint64(seed) &* 2654435761 &+ 1)
     // The brush a drop wears the ground with: points within Radius,
@@ -125,7 +125,7 @@ public func Rain(_ f: inout Field, _ h: HydraulicErosion, seed: uint32) {
 
 // heightAndGradient is the height at a point between points (in point
 // units) and its slope along X and Z, bilinearly.
-func heightAndGradient(_ f: Field, _ px: float32, _ pz: float32) -> (h: float32, gx: float32, gz: float32) {
+func heightAndGradient(f: Field, px: float32, pz: float32) -> (h: float32, gx: float32, gz: float32) {
     let i = int(px), j = int(pz)
     let u = px - float32(i), v = pz - float32(j)
     let w = f.Width

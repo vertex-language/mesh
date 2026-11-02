@@ -11,7 +11,7 @@ import (
 /// it by length, both mapped into `uv` (an atlas region; V spans the
 /// region once over the whole tube). A radius of 0 makes a point, as at a
 /// branch's tip; `capStart` closes the first ring with a disc.
-public func Sweep(_ path: [geom.Vec3], radii: [float32], sides: int = 8, uv: Rect = Rect.Whole, capStart: bool = false) -> Mesh {
+public func Sweep(path: [geom.Vec3], radii: [float32], sides: int = 8, uv: Rect = Rect.Whole, capStart: bool = false) -> Mesh {
     var m = Mesh()
     let n = path.count
     if n < 2 || radii.isEmpty { return m }

@@ -13,12 +13,12 @@ import (
 
 var failures = 0
 
-func check(_ ok: bool, _ what: string) {
+func check(ok: bool, what: string) {
     print(ok ? "ok    \(what)" : "FAIL  \(what)")
     if !ok { failures += 1 }
 }
 
-func near(_ a: geom.Vec3, _ b: geom.Vec3) -> bool {
+func near(a: geom.Vec3, b: geom.Vec3) -> bool {
     return math.Abs(a.X - b.X) < 1e-5 && math.Abs(a.Y - b.Y) < 1e-5 && math.Abs(a.Z - b.Z) < 1e-5
 }
 
@@ -153,7 +153,7 @@ func heights() {
     print("      a \(f.Width)² field of one warped layer in \(t1.Elapsed().AsMilliseconds()) ms")
 }
 
-func total(_ f: height.Field) -> float32 {
+func total(f: height.Field) -> float32 {
     var s: float32 = 0
     for h in f.Heights { s += h }
     return s

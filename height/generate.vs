@@ -103,7 +103,7 @@ public struct Recipe {
 
 /// Generate builds a recipe's ground, centered on the origin: noise
 /// layers, then hydraulic and thermal erosion, then smoothing.
-public func Generate(_ r: Recipe) -> Field {
+public func Generate(r: Recipe) -> Field {
     let n = r.Points
     let half = float32(n - 1) * r.Spacing / 2
     var f = Field(width: n, depth: n, spacing: r.Spacing, origin: geom.Vec2(-half, -half), fill: r.Base)
@@ -118,7 +118,7 @@ public func Generate(_ r: Recipe) -> Field {
 
 /// Add puts a noise layer onto the ground, rows shared out over
 /// `threads` threads.
-public func Add(_ f: inout Field, _ l: Layer, seed: uint32, threads: int = 8) {
+public func Add(f: inout Field, l: Layer, seed: uint32, threads: int = 8) {
     let w = f.Width, d = f.Depth
     let ox = f.Origin.X, oz = f.Origin.Y, sp = f.Spacing
     let n = max(1, min(threads, d))
@@ -151,7 +151,7 @@ final class band {
 }
 
 // layerRows is a layer's heights for rows from..<to of a field.
-func layerRows(_ l: Layer, seed: uint32, width w: int, from: int, to: int, ox: float32, oz: float32, spacing: float32) -> [float32] {
+func layerRows(l: Layer, seed: uint32, width w: int, from: int, to: int, ox: float32, oz: float32, spacing: float32) -> [float32] {
     let s = noise.Simplex(seed: seed &+ l.Seed &* 7919)
     let wx = noise.Simplex(seed: seed &+ l.Seed &* 7919 &+ 101)
     let wz = noise.Simplex(seed: seed &+ l.Seed &* 7919 &+ 202)
@@ -197,7 +197,7 @@ func layerRows(_ l: Layer, seed: uint32, width w: int, from: int, to: int, ox: f
 
 /// Blur softens the ground: each point moves `amount` of the way to the
 /// average of its four neighbors.
-public func Blur(_ f: inout Field, amount: float32) {
+public func Blur(f: inout Field, amount: float32) {
     let old = f.Heights
     let w = f.Width
     for j in 0..<f.Depth {
@@ -260,7 +260,7 @@ extension Recipe {
 
 /// DecodeRecipe reads a recipe written by Encode (or by hand; what's
 /// missing keeps its default).
-public func DecodeRecipe(_ text: string) throws -> Recipe {
+public func DecodeRecipe(text: string) throws -> Recipe {
     let v = try json.Parse(text)
     var r = Recipe()
     r.Name = v["name"]?.String ?? ""
@@ -304,11 +304,11 @@ public func DecodeRecipe(_ text: string) throws -> Recipe {
     return r
 }
 
-func f32(_ v: json.Value?, _ fallback: float32) -> float32 {
+func f32(v: json.Value?, fallback: float32) -> float32 {
     guard let d = v?.Double else { return fallback }
     return float32(d)
 }
 
-func num(_ x: float32) -> json.Value {
+func num(x: float32) -> json.Value {
     return .number("\(Double(Int((x * 10000).rounded())) / 10000)")
 }

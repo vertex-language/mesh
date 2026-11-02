@@ -37,7 +37,7 @@ public struct Mesh {
 
 extension Mesh {
     /// Append adds another mesh's triangles to this one.
-    public mutating func Append(_ m: Mesh) {
+    public mutating func Append(m: Mesh) {
         let base = uint32(Positions.count)
         Positions += m.Positions
         Normals += m.Normals
@@ -100,7 +100,7 @@ public struct Rect: Equatable {
     public var U1: float32
     public var V1: float32
 
-    public init(_ u0: float32, _ v0: float32, _ u1: float32, _ v1: float32) {
+    public init(u0: float32, v0: float32, u1: float32, v1: float32) {
         U0 = u0
         V0 = v0
         U1 = u1
@@ -111,7 +111,7 @@ public struct Rect: Equatable {
     public static let Whole = Rect(0, 0, 1, 1)
 
     /// Tile is cell (column, row) of a texture cut into a grid of n × n.
-    public static func Tile(_ column: int, _ row: int, of n: int) -> Rect {
+    public static func Tile(column: int, row: int, of n: int) -> Rect {
         let s = 1 / float32(n)
         return Rect(float32(column) * s, float32(row) * s, float32(column + 1) * s, float32(row + 1) * s)
     }
@@ -146,7 +146,7 @@ public struct BoxUV {
 /// Quad is a rectangle from four corners counter-clockwise seen from in
 /// front (left-bottom, right-bottom, right-top, left-top) and the texture
 /// region stretched over it.
-public func Quad(_ lb: geom.Vec3, _ rb: geom.Vec3, _ rt: geom.Vec3, _ lt: geom.Vec3, uv: Rect = Rect.Whole) -> Mesh {
+public func Quad(lb: geom.Vec3, rb: geom.Vec3, rt: geom.Vec3, lt: geom.Vec3, uv: Rect = Rect.Whole) -> Mesh {
     var m = Mesh()
     let n = (rb - lb).Cross(lt - lb).Normalized()
     m.Positions = [lb, rb, rt, lt]
@@ -158,10 +158,10 @@ public func Quad(_ lb: geom.Vec3, _ rb: geom.Vec3, _ rt: geom.Vec3, _ lt: geom.V
 
 /// Box is the six faces of an axis-aligned box, each textured with its
 /// region of `uv`.
-public func Box(_ b: geom.AABB, uv: BoxUV = BoxUV(all: Rect.Whole)) -> Mesh {
+public func Box(b: geom.AABB, uv: BoxUV = BoxUV(all: Rect.Whole)) -> Mesh {
     let x0 = b.Min.X, y0 = b.Min.Y, z0 = b.Min.Z
     let x1 = b.Max.X, y1 = b.Max.Y, z1 = b.Max.Z
-    func v(_ x: float32, _ y: float32, _ z: float32) -> geom.Vec3 { return geom.Vec3(x, y, z) }
+    func v(x: float32, y: float32, z: float32) -> geom.Vec3 { return geom.Vec3(x, y, z) }
     var m = Mesh()
     m.Append(Quad(v(x1, y0, z1), v(x1, y0, z0), v(x1, y1, z0), v(x1, y1, z1), uv: uv.PosX))
     m.Append(Quad(v(x0, y0, z0), v(x0, y0, z1), v(x0, y1, z1), v(x0, y1, z0), uv: uv.NegX))

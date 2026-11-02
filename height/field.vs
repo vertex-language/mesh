@@ -46,32 +46,32 @@ public struct Field {
     }
 
     /// At is point (i, j)'s height; points off the edge take the edge's.
-    @inlinable public func At(_ i: int, _ j: int) -> float32 {
+    @inlinable public func At(i: int, j: int) -> float32 {
         let x = i < 0 ? 0 : (i >= Width ? Width - 1 : i)
         let z = j < 0 ? 0 : (j >= Depth ? Depth - 1 : j)
         return Heights[z * Width + x]
     }
 
     /// Set changes point (i, j)'s height.
-    public mutating func Set(_ i: int, _ j: int, _ h: float32) {
+    public mutating func Set(i: int, j: int, h: float32) {
         if i < 0 || j < 0 || i >= Width || j >= Depth { return }
         Heights[j * Width + i] = h
     }
 
     /// Point is where point (i, j) is in the world.
-    public func Point(_ i: int, _ j: int) -> geom.Vec3 {
+    public func Point(i: int, j: int) -> geom.Vec3 {
         return geom.Vec3(Origin.X + float32(i) * Spacing, At(i, j), Origin.Y + float32(j) * Spacing)
     }
 
     /// Contains is whether the world's (x, z) is over the field.
-    public func Contains(_ x: float32, _ z: float32) -> bool {
+    public func Contains(x: float32, z: float32) -> bool {
         let s = Size
         return x >= Origin.X && z >= Origin.Y && x <= Origin.X + s.X && z <= Origin.Y + s.Y
     }
 
     /// Sample is the ground's height under the world's (x, z), between
     /// points bilinearly (clamped at the edges).
-    public func Sample(_ x: float32, _ z: float32) -> float32 {
+    public func Sample(x: float32, z: float32) -> float32 {
         let fx = (x - Origin.X) / Spacing, fz = (z - Origin.Y) / Spacing
         let i = int(math.Floor(fx)), j = int(math.Floor(fz))
         let tx = fx - float32(i), tz = fz - float32(j)
@@ -80,7 +80,7 @@ public struct Field {
     }
 
     /// Normal is which way the ground faces at the world's (x, z).
-    public func Normal(_ x: float32, _ z: float32) -> geom.Vec3 {
+    public func Normal(x: float32, z: float32) -> geom.Vec3 {
         let e = Spacing
         let dx = Sample(x + e, z) - Sample(x - e, z)
         let dz = Sample(x, z + e) - Sample(x, z - e)
@@ -88,7 +88,7 @@ public struct Field {
     }
 
     /// NormalAt is which way the ground faces at point (i, j).
-    public func NormalAt(_ i: int, _ j: int) -> geom.Vec3 {
+    public func NormalAt(i: int, j: int) -> geom.Vec3 {
         let dx = At(i + 1, j) - At(i - 1, j)
         let dz = At(i, j + 1) - At(i, j - 1)
         return geom.Vec3(-dx, 2 * Spacing, -dz).Normalized()
@@ -96,7 +96,7 @@ public struct Field {
 
     /// Slope is how steep the ground is at the world's (x, z): 0 level,
     /// 1 a wall (one minus the normal's Y).
-    public func Slope(_ x: float32, _ z: float32) -> float32 {
+    public func Slope(x: float32, z: float32) -> float32 {
         return 1 - Normal(x, z).Y
     }
 
